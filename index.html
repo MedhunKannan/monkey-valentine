@@ -92,6 +92,7 @@
     border: none;
     background: #ff4da6;
     color: white;
+    cursor: pointer;
   }
 </style>
 </head>
@@ -103,7 +104,7 @@
     <h1>🐒🍣💖</h1>
     <h2>Monkey Rolls for Love</h2>
     <p>A tiny game for someone I adore</p>
-    <button onclick="startGame()">START 💕</button>
+    <button id="startBtn">START 💕</button>
   </div>
 
   <div id="score">🍣 Sushi: 0</div>
@@ -126,11 +127,13 @@
 </div>
 
 <script>
-let monkey = document.getElementById("monkey");
-let scoreEl = document.getElementById("score");
-let message = document.getElementById("message");
-let valentine = document.getElementById("valentine");
-let music = document.getElementById("music");
+const game = document.getElementById("game"); // ✅ FIX
+const monkey = document.getElementById("monkey");
+const scoreEl = document.getElementById("score");
+const message = document.getElementById("message");
+const valentine = document.getElementById("valentine");
+const music = document.getElementById("music");
+const startBtn = document.getElementById("startBtn");
 
 let jumping = false;
 let score = 0;
@@ -144,14 +147,16 @@ const messages = [
   "She means everything to me 💕"
 ];
 
+startBtn.addEventListener("click", startGame);
+
 function startGame() {
   document.getElementById("startScreen").style.display = "none";
-  music.play().catch(()=>{});
+  music.play().catch(() => {});
   loop = setInterval(spawnItem, 1400);
 }
 
 function jump() {
-  if (jumping) return;
+  if (jumping || document.getElementById("startScreen").style.display !== "none") return;
   jumping = true;
   monkey.style.bottom = "210px";
   setTimeout(() => {
@@ -164,17 +169,25 @@ document.addEventListener("touchstart", jump);
 document.addEventListener("click", jump);
 
 function spawnItem() {
-  let item = document.createElement("div");
+  const item = document.createElement("div");
   item.className = "item";
-  let heart = Math.random() < 0.3;
+  const heart = Math.random() < 0.3;
   item.textContent = heart ? "💖🍣" : "🍣";
   game.appendChild(item);
 
   let x = window.innerWidth;
 
-  let interval = setInterval(() => {
+  const interval = setInterval(() => {
     x -= speed;
     item.style.right = x + "px";
 
-    let i = item.getBoundingClientRect();
-    let m = monkey.getBounding
+    const i = item.getBoundingClientRect();
+    const m = monkey.getBoundingClientRect();
+
+    if (i.left < m.right && i.right > m.left && i.bottom > m.top) {
+      score += heart ? 3 : 1;
+      scoreEl.textContent = "🍣 Sushi: " + score;
+      item.remove();
+      clearInterval(interval);
+
+      if (score % 3 ===
