@@ -11,7 +11,6 @@
     font-family: system-ui, -apple-system;
     background: linear-gradient(#ffd6e8, #fff5fa);
     overflow: hidden;
-    touch-action: manipulation;
   }
 
   #game {
@@ -47,8 +46,8 @@
   .item {
     position: absolute;
     bottom: 90px;
-    right: -80px;
     font-size: 48px;
+    right: -80px;
   }
 
   #ground {
@@ -127,67 +126,9 @@
 </div>
 
 <script>
-const game = document.getElementById("game"); // ✅ FIX
+const game = document.getElementById("game");
 const monkey = document.getElementById("monkey");
 const scoreEl = document.getElementById("score");
 const message = document.getElementById("message");
 const valentine = document.getElementById("valentine");
-const music = document.getElementById("music");
-const startBtn = document.getElementById("startBtn");
-
-let jumping = false;
-let score = 0;
-let speed = 4;
-let loop;
-
-const messages = [
-  "I think… I really like her 🥹",
-  "My heart is doing backflips",
-  "Okay wow this is love isn’t it",
-  "She means everything to me 💕"
-];
-
-startBtn.addEventListener("click", startGame);
-
-function startGame() {
-  document.getElementById("startScreen").style.display = "none";
-  music.play().catch(() => {});
-  loop = setInterval(spawnItem, 1400);
-}
-
-function jump() {
-  if (jumping || document.getElementById("startScreen").style.display !== "none") return;
-  jumping = true;
-  monkey.style.bottom = "210px";
-  setTimeout(() => {
-    monkey.style.bottom = "90px";
-    jumping = false;
-  }, 350);
-}
-
-document.addEventListener("touchstart", jump);
-document.addEventListener("click", jump);
-
-function spawnItem() {
-  const item = document.createElement("div");
-  item.className = "item";
-  const heart = Math.random() < 0.3;
-  item.textContent = heart ? "💖🍣" : "🍣";
-  game.appendChild(item);
-
-  let x = window.innerWidth;
-
-  const interval = setInterval(() => {
-    x -= speed;
-    item.style.right = x + "px";
-
-    const i = item.getBoundingClientRect();
-    const m = monkey.getBoundingClientRect();
-
-    if (i.left < m.right && i.right > m.left && i.bottom > m.top) {
-      score += heart ? 3 : 1;
-      scoreEl.textContent = "🍣 Sushi: " + score;
-      item.remove();
-      clearInterval(interval);
-
-      if (score % 3 ===
+const music = docume
