@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Monkey Rolls for Love</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system;
+    background: linear-gradient(#ffd6e8, #fff5fa);
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  #game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+  }
+
+  #startScreen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#ffb3d9, #ffe6f2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  #monkey {
+    position: absolute;
+    bottom: 90px;
+    left: 40px;
+    font-size: 64px;
+    transition: transform 0.3s;
+  }
+
+  #monkey.shy {
+    transform: scale(1.3) rotate(-5deg);
+  }
+
+  .item {
+    position: absolute;
+    bottom: 90px;
+    right: -80px;
+    font-size: 48px;
+  }
+
+  #ground {
+    position: absolute;
+    bottom: 70px;
+    width: 100%;
+    height: 20px;
+    background: #ff85b3;
+  }
+
+  #score {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 22px;
+  }
+
+  #message {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    font-size: 26px;
+    display: none;
+  }
+
+  #valentine {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#ffd6e8, #fff);
+    color: #b30059;
+    padding-top: 18vh;
+    z-index: 9;
+  }
+
+  button {
+    font-size: 22px;
+    padding: 14px 28px;
+    margin: 12px;
+    border-radius: 16px;
+    border: none;
+    background: #ff4da6;
+    color: white;
+  }
+</style>
+</head>
+
+<body>
+<div id="game">
+
+  <div id="startScreen">
+    <h1>🐒🍣💖</h1>
+    <h2>Monkey Rolls for Love</h2>
+    <p>A tiny game for someone I adore</p>
+    <button onclick="startGame()">START 💕</button>
+  </div>
+
+  <div id="score">🍣 Sushi: 0</div>
+  <div id="monkey">🐒</div>
+  <div id="ground"></div>
+  <div id="message"></div>
+
+  <div id="valentine">
+    <h2>I didn’t plan this…</h2>
+    <h2>but somehow everything feels better with you.</h2>
+    <h1>Will you be my Valentine? 💗</h1>
+    <button onclick="yes()">YES 💖</button>
+    <button onclick="yes()">YES, obviously 🙄💖</button>
+  </div>
+
+  <audio id="music" loop>
+    <source src="i_guess_im_in_love.mp3" type="audio/mpeg">
+  </audio>
+
+</div>
+
+<script>
+let monkey = document.getElementById("monkey");
+let scoreEl = document.getElementById("score");
+let message = document.getElementById("message");
+let valentine = document.getElementById("valentine");
+let music = document.getElementById("music");
+
+let jumping = false;
+let score = 0;
+let speed = 4;
+let loop;
+
+const messages = [
+  "I think… I really like her 🥹",
+  "My heart is doing backflips",
+  "Okay wow this is love isn’t it",
+  "She means everything to me 💕"
+];
+
+function startGame() {
+  document.getElementById("startScreen").style.display = "none";
+  music.play().catch(()=>{});
+  loop = setInterval(spawnItem, 1400);
+}
+
+function jump() {
+  if (jumping) return;
+  jumping = true;
+  monkey.style.bottom = "210px";
+  setTimeout(() => {
+    monkey.style.bottom = "90px";
+    jumping = false;
+  }, 350);
+}
+
+document.addEventListener("touchstart", jump);
+document.addEventListener("click", jump);
+
+function spawnItem() {
+  let item = document.createElement("div");
+  item.className = "item";
+  let heart = Math.random() < 0.3;
+  item.textContent = heart ? "💖🍣" : "🍣";
+  game.appendChild(item);
+
+  let x = window.innerWidth;
+
+  let interval = setInterval(() => {
+    x -= speed;
+    item.style.right = x + "px";
+
+    let i = item.getBoundingClientRect();
+    let m = monkey.getBounding
